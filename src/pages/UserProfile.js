@@ -1,27 +1,21 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// UserProfile.js
+import { useParams, useOutletContext } from "react-router-dom";
 
 function UserProfile() {
-  const [user, setUser] = useState({});
   const params = useParams();
-  const userId = params.id;
+  const users = useOutletContext();
 
-  useEffect(() =>{
-    fetch(`http://localhost:4000/users/${userId}`)
-    .then(r => r.json())
-    .then(data => setUser(data))
-    .catch(error => console.error(error));
-  }, [userId]);
+  const user = users?.find(user => user.id === parseInt(params.id));
 
-  if(!user.name){
-    return <h1>Loading...</h1>;
-  };
+  if (!users || !user) {
+    return <h2>Loading user profile...</h2>;
+  }
 
-  return(  
-      <aside>
-        <h1>{user.name}</h1>
-      </aside>
+  return (
+    <aside>
+      <h1>{user.name}</h1>
+    </aside>
   );
-};
+}
 
 export default UserProfile;
